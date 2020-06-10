@@ -1,0 +1,6 @@
+br\gov\sp\fatec\aluguel_roupas\dao\PersistenceManager.class
+br\gov\sp\fatec\aluguel_roupas\entity\Cliente.class
+br\gov\sp\fatec\aluguel_roupas\entity\Vendedor.class
+br\gov\sp\fatec\aluguel_roupas\entity\Aluguel.class
+br\gov\sp\fatec\aluguel_roupas\entity\Roupa.class
+br\gov\sp\fatec\aluguel_roupas\App.class
