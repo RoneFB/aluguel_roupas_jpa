@@ -26,7 +26,7 @@ private static PersistenceManager manager;
     public EntityManagerFactory getEntityManagerFactory() {
         if(factory == null) {
             factory = Persistence
-                    .createEntityManagerFactory("aluguel_roupas");
+                    .createEntityManagerFactory("aluguel");
         }
         return factory;
     }

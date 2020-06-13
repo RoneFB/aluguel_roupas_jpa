@@ -18,10 +18,11 @@ import javax.persistence.Table;
 @Entity
 @Table(name="alu_aluguel")
 public class Aluguel {
+	
 	@Id
     @GeneratedValue(strategy=GenerationType.IDENTITY)
     @Column(name="alu_id")
-	private Integer id;
+	private Long id;
 	
 	@ManyToOne(fetch = FetchType.EAGER)
 	 @JoinColumn(name = "cli_id")
@@ -32,7 +33,7 @@ public class Aluguel {
 	private Vendedor vendedor;
 	
 	@ManyToMany(fetch = FetchType.EAGER)
-	@JoinTable(name = "alu_aluga", 
+	@JoinTable(name = "alu_recebe", 
     joinColumns = { @JoinColumn(name = "alu_id") }, 
     inverseJoinColumns = { @JoinColumn(name = "rou_id") })
 	private Set<Roupa> roupas;
@@ -55,28 +56,29 @@ public class Aluguel {
 		super();
 	}
 
-	public Aluguel(Cliente cliente, Vendedor vendedor, Set<Roupa> roupas, LocalDate dataLocacao, LocalDate dataRetirada,
+	public Aluguel(Cliente cliente, Vendedor vendedor, LocalDate dataLocacao, LocalDate dataRetirada,
 			LocalDate dataDevolucao, String ajuste) {
 		super();
 		this.cliente = cliente;
 		this.vendedor = vendedor;
-		this.roupas = roupas;
 		this.dataLocacao = dataLocacao;
 		this.dataRetirada = dataRetirada;
 		this.dataDevolucao = dataDevolucao;
 		this.ajuste = ajuste;
 	}
 
-	public Integer getId() {
-		return id;
-	}
 
-	public void setId(Integer id) {
-		this.id = id;
-	}
 
 	public Cliente getCliente() {
 		return cliente;
+	}
+
+	public Long getId() {
+		return id;
+	}
+
+	public void setId(Long id) {
+		this.id = id;
 	}
 
 	public void setCliente(Cliente cliente) {
