@@ -3,6 +3,7 @@ package br.gov.sp.fatec.aluguel_roupas.entity;
 import java.time.LocalDate;
 import java.util.Set;
 
+import javax.persistence.AttributeOverride;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -17,12 +18,10 @@ import javax.persistence.Table;
 
 @Entity
 @Table(name="alu_aluguel")
-public class Aluguel {
+@AttributeOverride(name = "id", column = @Column(name = "alu_id"))
+public class Aluguel extends BaseEntity{
 	
-	@Id
-    @GeneratedValue(strategy=GenerationType.IDENTITY)
-    @Column(name="alu_id")
-	private Long id;
+	
 	
 	@ManyToOne(fetch = FetchType.EAGER)
 	 @JoinColumn(name = "cli_id")
@@ -71,14 +70,6 @@ public class Aluguel {
 
 	public Cliente getCliente() {
 		return cliente;
-	}
-
-	public Long getId() {
-		return id;
-	}
-
-	public void setId(Long id) {
-		this.id = id;
 	}
 
 	public void setCliente(Cliente cliente) {

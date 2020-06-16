@@ -2,6 +2,7 @@ package br.gov.sp.fatec.aluguel_roupas.entity;
 
 import java.util.Set;
 
+import javax.persistence.AttributeOverride;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -13,12 +14,10 @@ import javax.persistence.Table;
 
 @Entity
 @Table(name="rou_roupa")
-public class Roupa {
+@AttributeOverride(name = "id", column = @Column(name = "alu_id"))
+public class Roupa extends BaseEntity{
 	
-	@Id
-    @GeneratedValue(strategy=GenerationType.IDENTITY)
-    @Column(name="rou_id")
-	private Integer id;
+	
 	
 	@ManyToMany(fetch = FetchType.LAZY, mappedBy = "roupas")
 	private Set<Aluguel> aluguel;
@@ -47,18 +46,6 @@ public class Roupa {
 
 	public Roupa() {
 		super();
-	}
-
-
-
-	public Integer getId() {
-		return id;
-	}
-
-	
-
-	public void setId(Integer id) {
-		this.id = id;
 	}
 
 	public Set<Aluguel> getAluguel() {
