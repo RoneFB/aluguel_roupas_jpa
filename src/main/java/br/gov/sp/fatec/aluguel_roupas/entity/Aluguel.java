@@ -21,8 +21,6 @@ import javax.persistence.Table;
 @AttributeOverride(name = "id", column = @Column(name = "alu_id"))
 public class Aluguel extends BaseEntity{
 	
-	
-	
 	@ManyToOne(fetch = FetchType.EAGER)
 	 @JoinColumn(name = "cli_id")
 	private Cliente cliente;
@@ -34,9 +32,15 @@ public class Aluguel extends BaseEntity{
 	@ManyToMany(fetch = FetchType.EAGER)
 	@JoinTable(name = "alu_recebe", 
     joinColumns = { @JoinColumn(name = "alu_id") }, 
-    inverseJoinColumns = { @JoinColumn(name = "rou_id") })
+    inverseJoinColumns = { @JoinColumn(name = "item_id") })
 	private Set<Roupa> roupas;
 	
+	@ManyToMany(fetch = FetchType.EAGER)
+	@JoinTable(name = "alu_recebe", 
+    joinColumns = { @JoinColumn(name = "alu_id") }, 
+    inverseJoinColumns = { @JoinColumn(name = "item_id") })
+	private Set<Calcado> calcados;
+
 	@Column(name="alu_data_locacao")
 	private LocalDate dataLocacao;
 	
@@ -48,8 +52,6 @@ public class Aluguel extends BaseEntity{
 	
 	@Column(name="alu_ajuste")
 	private String ajuste;
-	
-	
 
 	public Aluguel() {
 		super();
@@ -65,8 +67,6 @@ public class Aluguel extends BaseEntity{
 		this.dataDevolucao = dataDevolucao;
 		this.ajuste = ajuste;
 	}
-
-
 
 	public Cliente getCliente() {
 		return cliente;
@@ -84,12 +84,22 @@ public class Aluguel extends BaseEntity{
 		this.vendedor = vendedor;
 	}
 
+	
+
 	public Set<Roupa> getRoupas() {
 		return roupas;
 	}
 
 	public void setRoupas(Set<Roupa> roupas) {
 		this.roupas = roupas;
+	}
+
+	public Set<Calcado> getCalcados() {
+		return calcados;
+	}
+
+	public void setCalcados(Set<Calcado> calcados) {
+		this.calcados = calcados;
 	}
 
 	public LocalDate getDataLocacao() {
@@ -123,7 +133,6 @@ public class Aluguel extends BaseEntity{
 	public void setAjuste(String ajuste) {
 		this.ajuste = ajuste;
 	}
-	
 
-	
+
 }

@@ -10,7 +10,9 @@ import javax.persistence.Query;
 
 import br.gov.sp.fatec.aluguel_roupas.dao.PersistenceManager;
 import br.gov.sp.fatec.aluguel_roupas.entity.Aluguel;
+import br.gov.sp.fatec.aluguel_roupas.entity.Calcado;
 import br.gov.sp.fatec.aluguel_roupas.entity.Cliente;
+import br.gov.sp.fatec.aluguel_roupas.entity.Pessoa;
 import br.gov.sp.fatec.aluguel_roupas.entity.Roupa;
 import br.gov.sp.fatec.aluguel_roupas.entity.Vendedor;
 
@@ -26,37 +28,52 @@ public class App
         EntityManager manager = PersistenceManager
                 .getInstance().getEntityManager();
         
+       
+        
         Vendedor vendedor = new Vendedor();
         vendedor.setNome("Rone Felipe Bento");
         vendedor.setEmail("ronefelipe97@gmail.com");
         vendedor.setSenha("1234");
         
-        Cliente cliente = new Cliente("Jurema",
-        		"jurema@gmail.com", "5588774466", 23, "Altos de Santana",
-        		"Pico da Bandeira", 516, "São José dos Campos", "981565932");
+        Cliente cliente = new Cliente();
+        cliente.setNome("Joséfina fina");
+        cliente.setEmail("josefina@bol.com");
+        cliente.setCpf("12346789");
+        cliente.setRua("Av Pico da Bandeira");
+        cliente.setTelefone("981565932");
+        cliente.setBairro("Altos de Santana");
+        cliente.setCidade("São José dos Campos");
+        cliente.setNumero(516);
+        cliente.setIdade(23);
         
-        Roupa calca = new Roupa("Calça", "Preta", "44", 60.0);
-        Roupa camisa = new Roupa("Camisa", "Amarela", "G", 45.0);
-        Roupa sapato = new Roupa("Sapato", "Preto", "42", 50.0);
-        Roupa gravata = new Roupa("Gravata", "Azul", "M", 15.0);
         
-
+        Roupa roupa = new Roupa(); 
+        roupa.setTipo("camisa");
+        roupa.setTamanho("G");
+        roupa.setSexo("F");
+        roupa.setPreco(65.99);
+        roupa.setCor("Azul");
+        
+        Calcado calcado = new Calcado();
+        calcado.setSexo("F");
+        calcado.setPreco(50);
+        calcado.setNumero(38);
+        calcado.setModelo("Social");
+        calcado.setCor("preto");
         
         Aluguel aluguel = new Aluguel(cliente, vendedor,LocalDate.of(2020, 06, 02), LocalDate.of(2020, 06, 05), LocalDate.of(2020, 06, 8), "Barra 2 cm");
        
         aluguel.setRoupas(new HashSet<Roupa>());
-        aluguel.getRoupas().add(calca);
-        aluguel.getRoupas().add(camisa);
-        aluguel.getRoupas().add(sapato);
-        aluguel.getRoupas().add(gravata);
+        aluguel.getRoupas().add(roupa);
+        
+        aluguel.setCalcados(new HashSet<Calcado>());
+        aluguel.getCalcados().add(calcado);
         
         manager.getTransaction().begin();
         manager.persist(vendedor);
         manager.persist(cliente);
-        manager.persist(calca);
-        manager.persist(camisa);
-        manager.persist(sapato);
-        manager.persist(gravata);
+        manager.persist(roupa);
+        manager.persist(calcado);
         manager.persist(aluguel);
         manager.getTransaction().commit();
         
@@ -78,7 +95,6 @@ public class App
         	System.out.println("Cidade: " + alu.getCliente().getCidade());
         	System.out.println("Bairro: " + alu.getCliente().getBairro());
         	System.out.println("Rua: " + alu.getCliente().getRua());
-        	System.out.println("Telefone: " + alu.getCliente().getTelefone());
         	System.out.println("Email: " + alu.getCliente().getEmail());
         	System.out.println("\n-----------------------------------Inf Aluguel----------------------------------------------");
         	System.out.println("Data Aluguel: " + alu.getDataDevolucao());
