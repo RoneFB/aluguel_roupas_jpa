@@ -41,7 +41,7 @@ public class AluguelDao {
 	
 	public Aluguel searchAluByClienteAndVendedor() {
 		String consulta = "select a from Aluguel a"
-				+ "inner join a";
+				+ "inner join a.vendedor v where v.usu_id = a.usu_id";
 		TypedQuery<Aluguel> query = manager.createQuery(consulta, Aluguel.class);
 		return query.getSingleResult();
 	}

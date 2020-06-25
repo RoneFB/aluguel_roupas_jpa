@@ -7,9 +7,6 @@ import javax.persistence.AttributeOverride;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
@@ -22,11 +19,11 @@ import javax.persistence.Table;
 public class Aluguel extends BaseEntity{
 	
 	@ManyToOne(fetch = FetchType.EAGER)
-	 @JoinColumn(name = "cli_id")
+	@JoinColumn(name = "cli_id")
 	private Cliente cliente;
 	
 	@ManyToOne(fetch = FetchType.EAGER)
-	 @JoinColumn(name = "usu_id")
+	@JoinColumn(name = "usu_id")
 	private Vendedor vendedor;
 	
 	@ManyToMany(fetch = FetchType.EAGER)
