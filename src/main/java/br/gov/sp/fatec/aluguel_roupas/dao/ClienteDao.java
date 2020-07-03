@@ -30,8 +30,8 @@ public class ClienteDao {
 	public void save(Cliente cliente) throws RollbackException {
 		try {
 			manager.getTransaction().begin();
-			manager.flush();
 			saveWithoutCommit(cliente);
+			manager.flush();
 			manager.getTransaction().commit();
 		}catch(RollbackException e) {
 			manager.getTransaction().rollback();

@@ -8,6 +8,7 @@ import java.util.Set;
 import javax.persistence.EntityManager;
 import javax.persistence.Query;
 
+import br.gov.sp.fatec.aluguel_roupas.dao.AluguelDao;
 import br.gov.sp.fatec.aluguel_roupas.dao.PersistenceManager;
 import br.gov.sp.fatec.aluguel_roupas.entity.Aluguel;
 import br.gov.sp.fatec.aluguel_roupas.entity.Calcado;
@@ -25,15 +26,15 @@ public class App
     public static void main( String[] args )
     {
 
-        EntityManager manager = PersistenceManager
-                .getInstance().getEntityManager();
-        
-       
-        
         Vendedor vendedor = new Vendedor();
         vendedor.setNome("Rone Felipe Bento");
         vendedor.setEmail("ronefelipe97@gmail.com");
         vendedor.setSenha("1234");
+        
+        Vendedor vendedor2 = new Vendedor();
+        vendedor2.setNome("Bernadino Josefino");
+        vendedor2.setEmail("bernadino@gmail.com");
+        vendedor2.setSenha("1234");
         
         Cliente cliente = new Cliente();
         cliente.setNome("Joséfina fina");
@@ -45,7 +46,7 @@ public class App
         cliente.setCidade("São José dos Campos");
         cliente.setNumero(516);
         cliente.setIdade(23);
-        
+    
         
         Roupa roupa = new Roupa(); 
         roupa.setTipo("camisa");
@@ -53,63 +54,48 @@ public class App
         roupa.setSexo("F");
         roupa.setPreco(65.99);
         roupa.setCor("Azul");
-        
-        Calcado calcado = new Calcado();
-        calcado.setSexo("F");
-        calcado.setPreco(50);
-        calcado.setNumero(38);
-        calcado.setModelo("Social");
-        calcado.setCor("preto");
+       
         
         Aluguel aluguel = new Aluguel(cliente, vendedor,LocalDate.of(2020, 06, 02), LocalDate.of(2020, 06, 05), LocalDate.of(2020, 06, 8), "Barra 2 cm");
+        Aluguel aluguel2 = new Aluguel(cliente, vendedor2,LocalDate.of(2020, 06, 02), LocalDate.of(2020, 06, 05), LocalDate.of(2020, 06, 8), "Barra 2 cm");
+        
        
         aluguel.setRoupas(new HashSet<Roupa>());
         aluguel.getRoupas().add(roupa);
         
-        aluguel.setCalcados(new HashSet<Calcado>());
-        aluguel.getCalcados().add(calcado);
+        aluguel2.setRoupas(new HashSet<Roupa>());
+        aluguel2.getRoupas().add(roupa);
         
-        manager.getTransaction().begin();
-        manager.persist(vendedor);
-        manager.persist(cliente);
-        manager.persist(roupa);
-        manager.persist(calcado);
-        manager.persist(aluguel);
-        manager.getTransaction().commit();
+        AluguelDao aluguelDao = new AluguelDao();
+        aluguelDao.save(aluguel);
+        aluguelDao.save(aluguel2);
         
+        Aluguel aluConsu = new Aluguel();
+        aluConsu = aluguelDao.aluguelCompletebyID("1","2");
+        //showAluguel(aluConsu);
         
-        String queryText = "select a "+
-        		"from Aluguel a "+
-        		"where a.cliente = :cliente";
-        
-        Query query = manager.createQuery(queryText);
-        query.setParameter("cliente", cliente);
-        
-        @SuppressWarnings({"unchecked"})
-		List<Aluguel> result = query.getResultList();
-        
-        for(Aluguel alu: result) {
-        	System.out.println("\n-----------------------------------Inf Cliente----------------------------------------------");
-        	System.out.println("Cliente: " + alu.getCliente().getNome());
-        	System.out.println("Telefone: " + alu.getCliente().getTelefone());
-        	System.out.println("Cidade: " + alu.getCliente().getCidade());
-        	System.out.println("Bairro: " + alu.getCliente().getBairro());
-        	System.out.println("Rua: " + alu.getCliente().getRua());
-        	System.out.println("Email: " + alu.getCliente().getEmail());
-        	System.out.println("\n-----------------------------------Inf Aluguel----------------------------------------------");
-        	System.out.println("Data Aluguel: " + alu.getDataDevolucao());
-        	System.out.println("Data Retirada: " + alu.getDataRetirada());
-        	System.out.println("Data Devolução: " + alu.getDataDevolucao());
-        	System.out.println("\n---------------------------------------------------------------------------------");
-        	for(Roupa rou :alu.getRoupas()){
-        		System.out.println("Tipo " + rou.getTipo() + " Cor: " + rou.getCor() + " Tamanho " + rou.getTamanho() + " Preço: "+rou.getPreco() );
-        	}
-        	
-        }
-        
-        manager.close();  
-        
-        
-        
+       
+        for(Aluguel alu:  aluguelDao.filterAluguelByRoupa("Azul", "G"))
+        	showAluguel(alu);
+    }
+    
+    private static void showAluguel(Aluguel aluguel) {
+    	System.out.println("" + aluguel.getId());
+    	System.out.println("" + aluguel.getAjuste());
+    	System.out.println("" + aluguel.getDataDevolucao());
+    	System.out.println("" + aluguel.getDataLocacao());
+    	System.out.println("" + aluguel.getDataRetirada());
+    
+    	showCliente(aluguel.getCliente());
+    }
+    
+    private static void showCliente(Cliente cliente) {
+    	System.out.println("" + cliente.getNome());
+    	System.out.println("" + cliente.getCpf());
+    	System.out.println("" + cliente.getEmail());
+    	System.out.println("" + cliente.getBairro());
+    	System.out.println("" + cliente.getNumero());
+    	System.out.println("" + cliente.getRua());
+    	System.out.println("" + cliente.getCidade());
     }
 }

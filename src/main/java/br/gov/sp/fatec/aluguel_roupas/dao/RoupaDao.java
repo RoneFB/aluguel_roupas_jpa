@@ -1,6 +1,7 @@
 package br.gov.sp.fatec.aluguel_roupas.dao;
 
 import javax.persistence.EntityManager;
+import javax.persistence.NoResultException;
 import javax.persistence.RollbackException;
 
 import br.gov.sp.fatec.aluguel_roupas.entity.Roupa;
@@ -43,5 +44,16 @@ public class RoupaDao {
 	public Roupa searchByID(Long id) {
 		return manager.find(Roupa.class, id);
 	}
+	
+
+	/*public Roupa ifRoupaAlugada() {
+		String consulta = "select r from Roupa r"
+				+ " inner join r.item";
+		try {
+			
+		}catch(NoResultException nre) {
+			return null;
+		}
+	}*/
 	
 }

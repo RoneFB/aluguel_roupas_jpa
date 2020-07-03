@@ -1,28 +1,38 @@
 package br.gov.sp.fatec.aluguel_roupas.dao;
 
+import java.util.List;
+
 import javax.persistence.EntityManager;
+import javax.persistence.NoResultException;
 import javax.persistence.RollbackException;
 import javax.persistence.TypedQuery;
 
 import br.gov.sp.fatec.aluguel_roupas.entity.Aluguel;
+import br.gov.sp.fatec.aluguel_roupas.entity.Roupa;
 
 
 public class AluguelDao {
 	
 	private EntityManager manager;
+	RoupaDao roupaDao;
+	ClienteDao clienteDao;
+	VendedorDao vendedorDao;
 
-	public AluguelDao(EntityManager manager) {
-		this.manager = manager;
-	}
 
 	public AluguelDao() {
-		super();
+		 this(PersistenceManager.getInstance().getEntityManager());
 	}
 	
+	public AluguelDao(EntityManager entityManager) {
+		this.manager = entityManager;
+		roupaDao = new RoupaDao();
+		clienteDao = new ClienteDao();
+		vendedorDao = new VendedorDao();
+	}
+
 	public void save(Aluguel aluguel) throws RollbackException {
 		try {
 			manager.getTransaction().begin();
-			manager.flush();
 			saveWithoutCommit(aluguel);
 			manager.getTransaction().commit();
 		}catch(RollbackException e) {
@@ -32,6 +42,17 @@ public class AluguelDao {
 	}
 	
 	public void saveWithoutCommit(Aluguel aluguel) {
+		for(Roupa roupa: aluguel.getRoupas()){
+			if(roupa.getId() == null) {
+				roupaDao.save(roupa);
+			}
+		}
+		if(aluguel.getCliente() != null && aluguel.getCliente().getId() == null) {
+			clienteDao.save(aluguel.getCliente());
+		}if(aluguel.getVendedor() != null && aluguel.getVendedor().getId() == null) {
+			vendedorDao.save(aluguel.getVendedor());
+		}
+		
 		if(aluguel.getId() == null) {
 			manager.persist(aluguel);		
 		}else {
@@ -39,11 +60,29 @@ public class AluguelDao {
 		}
 	}
 	
-	public Aluguel searchAluByClienteAndVendedor() {
+	public Aluguel aluguelCompletebyID(String idCli, String idVen) {
 		String consulta = "select a from Aluguel a"
-				+ "inner join a.vendedor v where v.usu_id = a.usu_id";
-		TypedQuery<Aluguel> query = manager.createQuery(consulta, Aluguel.class);
-		return query.getSingleResult();
+				+ " inner join a.vendedor v on v.id = a.vendedor"
+				+ " inner join a.cliente c on c.id = a.cliente"
+				+ " where c.id = :cliID and v.id = :venID";
+		try {
+			TypedQuery<Aluguel> query = manager.createQuery(consulta, Aluguel.class);
+			query.setParameter("cliID", Long.valueOf(idCli));
+			query.setParameter("venID", Long.valueOf(idVen));
+			return query.getSingleResult();
+			
+		}catch(NoResultException nre) {
+			return null;
+		}
 	}
 	
+	public List<Aluguel> filterAluguelByRoupa(String cor, String tamanho){
+		String consulta = "select a from Aluguel a"
+				+ " inner join a.roupas r on r.aluguel_roupas = a.id"
+				+ " where r.cor = :cor and r.tamanho = :tamanho";
+		TypedQuery<Aluguel> query = manager.createQuery(consulta, Aluguel.class);
+		query.setParameter("cor", cor);
+		query.setParameter("tamanho", tamanho);
+		return query.getResultList();
+	}
 }
